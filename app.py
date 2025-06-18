@@ -1,9 +1,13 @@
 import os
 from flask import Flask, request
 from telegram import Update
-from bot import application  # your Application instance
+from bot import application   # your PTB Application instance
 
 app = Flask(__name__)
+
+# —— Set your Telegram webhook as soon as this module is imported
+WEBHOOK_URL = os.environ["WEBHOOK_URL"]
+application.bot.set_webhook(WEBHOOK_URL)
 
 @app.route("/healthz")
 def healthz():
@@ -13,12 +17,10 @@ def healthz():
 def webhook():
     data = request.get_json(force=True)
     update = Update.de_json(data, application.bot)
-    # put it into PTB’s queue for processing
+    # queue it for the PTB Application to handle
     application.update_queue.put(update)
     return "OK"
 
 if __name__ == "__main__":
-    # set your webhook exactly once on startup
-    WEBHOOK_URL = os.environ["WEBHOOK_URL"]
-    application.bot.set_webhook(WEBHOOK_URL)
-    app.run(host="0.0.0.0", port=5000)
+    # for local testing, if you ever run `python app.py`
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
