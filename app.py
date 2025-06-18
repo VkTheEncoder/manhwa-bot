@@ -13,7 +13,7 @@ def healthz():
 def webhook():
     data = request.get_json(force=True)
     update = Update.de_json(data, application.bot)
-    application.update_queue.put(update)
+    application.update_queue.put_nowait(update)
     return "OK"
 
 if __name__ == "__main__":
