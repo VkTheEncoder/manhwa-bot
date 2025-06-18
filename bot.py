@@ -4,7 +4,7 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 from utils.extractor import pdf_to_images
 from utils.ocr import ocr_image
-from utils.openai_client import summarize_text
+from utils.openai_client import summarize_image_panel
 
 TELEGRAM_TOKEN = os.environ['TELEGRAM_TOKEN']
 
