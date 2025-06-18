@@ -1,0 +1,30 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment files
+.env
+.env.*
+
+# Temporary directories
+temp/
+.tmp/
+*.log
+
+# Git
+.git
+.gitignore
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Docker
+docker-compose.yml
