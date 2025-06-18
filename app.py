@@ -2,12 +2,13 @@ import os
 from flask import Flask, request
 from telegram import Update
 from bot import application   # your PTB Application instance
+import asyncio
 
 app = Flask(__name__)
 
 # —— Set your Telegram webhook as soon as this module is imported
 WEBHOOK_URL = os.environ["WEBHOOK_URL"]
-application.bot.set_webhook(WEBHOOK_URL)
+asyncio.run(application.bot.set_webhook(WEBHOOK_URL))
 
 @app.route("/healthz")
 def healthz():
