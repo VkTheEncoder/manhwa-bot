@@ -13,6 +13,8 @@ from utils.ocr import ocr_image
 from utils.openai_client import summarize_image_panel
 
 TELEGRAM_TOKEN = os.environ["TELEGRAM_TOKEN"]
+WEBHOOK_URL = os.environ["WEBHOOK_URL"]
+PORT = int(os.environ.get("PORT", 10000))
 
 async def start_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Send me a PDF of your manhwa!")
@@ -34,11 +36,21 @@ async def handle_pdf(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await context.bot.send_document(chat_id=user_id, document=output_txt)
 
-def create_application():
+def main():
     app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
     app.add_handler(CommandHandler("start", start_cmd))
     app.add_handler(MessageHandler(filters.Document.FileExtension("pdf"), handle_pdf))
-    return app
 
-# expose the Application object for Flask to drive
-application = create_application()
+    # This method will:
+    # 1) set the webhook to WEBHOOK_URL + "/webhook"
+    # 2) start a webserver on 0.0.0.0:PORT
+    # 3) begin dispatching incoming updates via that webhook
+    app.run_webhook(
+        listen="0.0.0.0",
+        port=PORT,
+        url_path="webhook",
+        webhook_url=f"{WEBHOOK_URL}/webhook",
+    )
+
+if __name__ == "__main__":
+    main()
